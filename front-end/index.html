@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Heart Risk Predictor</title></head>
+<body>
+  <h1>Heart Attack Risk</h1>
+  <form id="form">
+    Age: <input name="age" type="number" required><br>
+    Sex: <select name="sex"><option value="1">Male</option><option value="0">Female</option></select><br>
+    Chest Pain: <select name="cp">
+      <option value="0">Typical angina</option>
+      <option value="1">Atypical angina</option>
+      <option value="2">Non-anginal pain</option>
+      <option value="3">Asymptomatic</option>
+    </select><br>
+    <!-- add the other fields the same way… -->
+    <button type="submit">Check Risk</button>
+  </form>
+  <div id="result"></div>
+  <script>
+    document.getElementById('form').onsubmit = async e => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      const res = await fetch('https://YOUR-API-URL/predict', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(data)
+      });
+      const json = await res.json();
+      document.getElementById('result').innerText = 'Risk: ' + (json.risk*100).toFixed(1)+'%';
+    };
+  </script>
+</body>
+</html>
